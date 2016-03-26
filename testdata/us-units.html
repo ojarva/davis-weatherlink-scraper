@@ -1,0 +1,367 @@
+
+
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head><title>Davis | WeatherLink - My Weather Page</title>
+
+<!-- Force IE8 into compatibility mode so our shadows display correctly -->
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7"/>
+<meta http-equiv="refresh" content="300">
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="Keywords" content="Davis WeatherLinkIP WeatherLink">
+<meta name="Author" content="Andy Schmidt, Jeremaih Jeffress">
+<meta name="Robots" content="All">
+<meta name="Content-Language" content="English">
+<meta name="Copyright" content="&copy; 2015 Davis Instruments">
+
+<link type="image/x-icon" href="/favicon.ico" rel="Shortcut Icon">
+<link type="text/css" href="/lib/css/wl2.css" rel="stylesheet">
+<link type="text/css" href="/lib/css/colorbox.css" rel="stylesheet">
+<link type="text/css" href="/lib/css/jquery-ui-1.8.4.custom.css" rel="stylesheet">
+
+<script type="text/javascript" src="/lib/js/library/jquery-1.7.1.min.js?ver=20150909"></script>
+<script type="text/javascript" src="/lib/js/library/jquery-ui-1.8.17.custom.min.js?ver=20150909"></script>
+<script type="text/javascript" src="/lib/js/library/jquery.colorbox.js"></script>
+<script type="text/javascript" src="/lib/js/library/jquery.validate.min.js"></script>
+
+<script type="text/javascript" src="/lib/js/library/lodash.2.4.1.min.js?ver=20150909"></script>
+
+<script type="text/javascript" src="/lib/js/classes/Lib.js"></script>
+<script type="text/javascript" src="/lib/js/classes/FormValidator.js"></script>
+<script type="text/javascript" src="/lib/js/classes/Dialog.js"></script>
+<script type="text/javascript" src="/lib/js/classes/cAjaxHandler.js"></script>
+<script type="text/javascript" src="/lib/js/classes/cAjaxQueue.js"></script>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		// This will fade out the message box if there is one.
+		//LIB.fadeOutMessageBox();
+
+		//Buttons set with attributes data-link=1 will make the button perform as a link and will look for
+		//the attribruge data-href for the url location to link to.
+		$('body').on('click', 'button[data-link=1]', function(){
+			window.location.href = $(this).attr('data-href');
+		});
+	});
+</script>
+<script type="text/javascript">
+
+//--------------------------------------
+function changeUnits() {
+var oForm = document.forms['frmUnits'];
+var iType;
+
+	iType = oForm.selUnits.options[oForm.selUnits.selectedIndex].value;
+	document.location.href = "/user/sandwichship/index.php?view=summary&headers=1&type=" + iType;
+	return;
+}
+
+
+</script>
+
+</head>
+<body>
+
+
+<div id="outerContainer">
+<div id="mainContainer">
+
+<!-- Header -->
+<div style="float: left;">
+	<a href="http://www.weatherlink.com/"><img src="/images/wl_top.png" width="281" height="46" alt="WeatherLink Logo"></a>
+</div>
+<div style="float: left;">
+	<img src="/images/wl_top-mid.png" width="369" height="46" alt="">
+</div>
+<div style="float: left;">
+	<a href="http://www.davisnet.com" target="_blank"><img src="/images/wl_top-davis.png" width="112" height="46" alt="Davis Logo"></a>
+</div>
+<br clear="all" />
+
+<!-- START: TOP NAVIGATION -->
+<table align="center" width="760" class="header" border="0" cellspacing="0" cellpadding="0" summary="">
+<tr>
+	<td height="25" class="NavLeft">
+		<a href="/findoutmore.php">Find Out More</a> |
+		<a href="http://www.davisnet.com/support/weather/faq/index.asp?ProdFam=15&amp;submit=Get+Information"
+		 target="_blank">FAQ's</a> |
+		<a href="http://www.davisnet.com/weather/products/weather_product.asp?pnum=06555#price" target="_blank">Order Now</a> |
+		<a href="/register.php">Register</a>
+	</td>
+	<td height="25" class="NavRight">
+
+
+<a href="/user/sandwichship/index.php?view=main&amp;headers=1">My Weather</a> |
+<a href="/user/sandwichship/index.php?view=summary&amp;headers=1">Summary</a> |
+<a href="/user/sandwichship/index.php?view=summary&amp;headers=0">No Headers</a> |
+<a href="/map.php?station=sandwichship">Map</a> |
+<a href="/login.php">Login</a>
+
+	</td>
+</tr>
+<tr>
+	<td height="1" colspan="2" align="center"><img src="/images/dividing_line.gif" width="760" height="1" alt=""></td>
+</tr>
+<tr>
+	<td height="10" colspan="2" align="center"><img src="/images/spacer.gif" width="1" height="10" alt=""></td>
+</tr>
+</table>
+<!-- END: TOP NAVIGATION -->
+
+
+<!-- START: PAGE CONTENT -->
+
+
+<table align="center" width="760" class="content" border="0" cellspacing="0" cellpadding="0" summary="">
+<tr>
+	<td valign="top" align="center">
+
+		<table align="left" width="100%" border="0" cellspacing="0" cellpadding="0" summary="">
+		<tr>
+			<td align="left" valign="top">
+
+	<!-- START: SUMMARY WEATHER DISPLAY -->
+	<table width="760" cellpadding="0" cellspacing="0" border="0" summary="">
+	<tr>
+		<td align="left" valign="top" colspan="6">
+			<a href="http://www.weatherlink.com/" class="notext"><img src="/images/wl_network.png" alt="WeatherLink Network" width="431" height="43" border="0"></a>
+		</td>
+	</tr>
+	<tr><td colspan="6"><img src="/images/spacer.gif" width="10" height="11" border="0" alt=""></td></tr>
+	<tr><td colspan="6" class="summary_station_name">SANDWICH SHIP SUPPLY</td></tr>
+	<tr><td colspan="6" class="summary_timestamp">Current Conditions as of 8:05 Wednesday, September 9, 2015</td></tr>
+	<tr><td colspan="6"><img src="/images/spacer.gif" width="10" height="11" border="0" alt=""></td></tr>
+	<tr>
+		<td width="190" class="summary_header_label">Station Summary</td>
+		<td width="170" class="summary_header">Current</td>
+		<td width="200" colspan="2" class="summary_header">Today's Highs</td>
+		<td width="200" colspan="2" class="summary_header">Today's Lows</td>
+	</tr>
+	<tr><td colspan="6"><hr class="ThinLine"></td></tr>
+	<tr>
+		<td width="190" class="summary_data">Outside Temp</td>
+		<td width="170" class="summary_data">74.3 F</td>
+		<td width="100" class="summary_data">74.3 F</td>
+		<td width="100" class="summary_data">08:04</td>
+		<td width="100" class="summary_data">72.5 F</td>
+		<td width="100" class="summary_data">05:53</td>
+	</tr>
+	<tr>
+		<td width="190" class="summary_data">Outside Humidity</td>
+		<td width="170" class="summary_data">93%</td>
+		<td width="100" class="summary_data">96%</td>
+		<td width="100" class="summary_data">06:30</td>
+		<td width="100" class="summary_data">91%</td>
+		<td width="100" class="summary_data">00:00</td>
+	</tr>
+	<tr><td colspan="6"><hr class="ThinLine"></td></tr>
+	<tr>
+		<td width="190" class="summary_data">Inside Temp</td>
+		<td width="170" class="summary_data">72.7 F</td>
+		<td width="100" class="summary_data">77.4 F</td>
+		<td width="100" class="summary_data">00:00</td>
+		<td width="100" class="summary_data">72.1 F</td>
+		<td width="100" class="summary_data">07:21</td>
+	</tr>
+	<tr>
+		<td width="190" class="summary_data">Inside Humidity</td>
+		<td width="170" class="summary_data">68%</td>
+		<td width="100" class="summary_data">68%</td>
+		<td width="100" class="summary_data">07:11</td>
+		<td width="100" class="summary_data">52%</td>
+		<td width="100" class="summary_data">00:00</td>
+	</tr>
+	<tr><td colspan="6"><hr class="ThinLine"></td></tr>
+	<tr>
+		<td width="190" class="summary_data">Heat Index</td>
+		<td width="170" class="summary_data">78.0 F</td>
+		<td width="100" class="summary_data">77.0 F</td>
+		<td width="100" class="summary_data">07:23</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="190" class="summary_data">Wind Chill</td>
+		<td width="170" class="summary_data">72.0 F</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">71.0 F</td>
+		<td width="100" class="summary_data">00:43</td>
+	</tr>
+	<tr>
+		<td width="190" class="summary_data">Dew Point</td>
+		<td width="170" class="summary_data">72.0 F</td>
+		<td width="100" class="summary_data">72.0 F</td>
+		<td width="100" class="summary_data">04:39</td>
+		<td width="100" class="summary_data">71.0 F</td>
+		<td width="100" class="summary_data">00:00</td>
+	</tr>
+	<tr><td colspan="6"><hr class="ThinLine"></td></tr>
+	<tr>
+		<td width="190" class="summary_data">Barometer</td>
+		<td width="170" class="summary_data">29.917"</td>
+		<td width="100" class="summary_data">29.923"</td>
+		<td width="100" class="summary_data">00:19</td>
+		<td width="100" class="summary_data">29.890"</td>
+		<td width="100" class="summary_data">05:17</td>
+	</tr>
+	<tr>
+		<td width="190" class="summary_data">Bar Trend</td>
+		<td width="170" class="summary_data">Rising Slowly</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+	</tr>
+	<tr><td colspan="6"><hr class="ThinLine"></td></tr>
+	<tr>
+		<td width="190" class="summary_data">Wind Speed</td>
+		<td width="170" class="summary_data">10 KT</td>
+		<td width="100" class="summary_data">22 KT</td>
+		<td width="100" class="summary_data">06:27</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="190" class="summary_data">Wind Direction</td>
+		<td width="170" class="summary_data">WSW&nbsp;254&deg;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+	</tr>
+	<tr><td colspan="6"><hr class="ThinLine"></td></tr>
+	<tr>
+		<td width="190" class="summary_data">12 Hour Forecast</td>
+		<td width="570" class="summary_data" colspan="5">Increasing clouds with little temperature change. </td>
+	</tr>
+	<tr><td colspan="6"><hr class="ThinLine"></td></tr>
+	<tr><td colspan="6"><img src="/images/spacer.gif" width="10" height="11" border="0" alt=""></td></tr>
+	<tr>
+		<td width="190" class="summary_header_label">Wind</td>
+		<td width="170" class="summary_header">2 Minute</td>
+		<td width="100" class="summary_header">10 Minute</td>
+		<td width="100" class="summary_header">&nbsp;</td>
+		<td width="100" class="summary_header">&nbsp;</td>
+		<td width="100" class="summary_header">&nbsp;</td>
+	</tr>
+	<tr><td colspan="6"><hr class="ThinLine"></td></tr>
+	<tr>
+		<td width="190" class="summary_data">Average Wind Speed</td>
+		<td width="170" class="summary_data">10.1 KT</td>
+		<td width="100" class="summary_data">7.8 KT</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+	</tr>
+	<tr>
+		<td width="190" class="summary_data">Wind Gust Speed</td>
+		<td width="170" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">14.8 KT</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+	</tr>
+	<tr><td colspan="6"><hr class="ThinLine"></td></tr>
+	<tr><td colspan="6"><img src="/images/spacer.gif" width="10" height="11" border="0" alt=""></td></tr>
+	<tr>
+		<td width="190" class="summary_header_label">Rain</td>
+		<td width="170" class="summary_header">Rate</td>
+		<td width="100" class="summary_header">Day</td>
+		<td width="100" class="summary_header">Storm</td>
+		<td width="100" class="summary_header">Month</td>
+		<td width="100" class="summary_header">Year</td>
+	</tr>
+	<tr><td colspan="6"><hr class="ThinLine"></td></tr>
+	<tr>
+		<td width="190" class="summary_data">Rain</td>
+		<td width="170" class="summary_data">0.00"/Hour</td>
+		<td width="100" class="summary_data">0.00"</td>
+		<td width="100" class="summary_data">0.00"</td>
+		<td width="100" class="summary_data">0.00"</td>
+		<td width="100" class="summary_data">19.55"</td>
+	</tr>
+	<tr>
+		<td width="190" class="summary_data">Last Hour Rain</td>
+		<td width="170" class="summary_data">0.00"</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+		<td width="100" class="summary_data">&nbsp;</td>
+	</tr>
+	<tr><td colspan="6"><hr class="ThinLine"></td></tr>
+
+
+
+	</table>
+	<!-- END: SUMMARY WEATHER DISPLAY -->
+
+
+	<br>
+
+	<!-- START: DISPLAY SELECTION -->
+	<table width="760" cellpadding="0" cellspacing="0" border="0" summary="">
+	<tr>
+		<td align="left" valign="top" width="50%">
+
+	<form name="frmUnits" method="post" action="/user/sandwichship/index.php">
+	View page units as:
+	<select name="selUnits" class="device" onChange="JavaScript:changeUnits();">
+<option value="0" SELECTED>Station Defaults</option>
+<option value="1">Metric</option>
+<option value="2">US Imperial</option>
+	</select>
+	</form>
+
+		</td>
+		<td align="right" valign="top" width="50%">&nbsp;</td>
+	</tr>
+	</table>
+	<!-- END: DISPLAY SELECTION -->
+
+			</td>
+		</tr>
+		</table>
+
+	</td>
+</tr>
+</table>
+<br>
+
+<!-- END: PAGE CONTENT -->
+
+
+<!-- START: FOOTER -->
+<div class="Footer">
+	<div class="FooterLinks">
+		<a href="http://www.davisnet.com/about/index.asp" target="_blank">About Davis</a> |
+		<a href="privacy_corporate.php" target="_blank">Privacy</a> |
+		<a href="http://www.davisnet.com/support/weather/faq/">FAQ's</a> |
+		<a href="http://www.davisnet.com/contact/index.asp" target="_blank">Contact Us</a> |
+		<a href="http://www.davisnet.com/support/index.asp" target="_blank">Support</a> |
+		<a href="mailto:support@weatherlink.com?subject=WeatherLink+Website+Issue">Report Problems</a>
+	</div>
+	<div class="FooterText">
+		Copyright &copy; 2015 - Davis Instruments, Corp. - All Rights Reserved
+		- ver 1.14.11	</div>
+
+</div>
+<!-- END: FOOTER -->
+
+<br><br><br>
+
+<!-- START: Google Analytics -->
+<script src="http://www.google-analytics.com/urchin.js" type="text/javascript"></script>
+<script type="text/javascript">
+	_uacct="UA-3010397-2";
+	urchinTracker("/user/index.php");
+</script>
+<!-- END: Google Analytics -->
+
+</div><!-- mainContainer -->
+</div><!-- outerContainer -->
+
+</body>
+</html>
