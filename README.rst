@@ -20,5 +20,5 @@ Usage:
 ::
 
   import davis_weatherlink_scraper
-  scraper =  = WeatherLink()
+  scraper = WeatherLink()
   print scraper.get("hsksatama")
