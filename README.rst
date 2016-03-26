@@ -1,8 +1,6 @@
 Davis weatherlink scraper/parser
 ================================
 
-This small library fetches status information from Huawei B593 4G modem.
-
 Installation:
 
 ::
