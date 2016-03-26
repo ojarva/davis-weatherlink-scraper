@@ -9,7 +9,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='davis-weatherlink-scraper',
-    version='0.0.1',
+    version='0.0.2',
     description='Scraper and parser for Davis Weatherlink data',
     long_description=long_description,
     url='https://github.com/ojarva/davis-weatherlink-scraper',
