@@ -9,7 +9,7 @@ with open(path.join(here, 'README.rst'), encoding='utf-8') as f:
 
 setup(
     name='davis-weatherlink-scraper',
-    version='0.0.3',
+    version='0.0.4',
     description='Scraper and parser for Davis Weatherlink data',
     long_description=long_description,
     url='https://github.com/ojarva/davis-weatherlink-scraper',
@@ -33,7 +33,7 @@ setup(
     ],
     keywords='davis weatherlink weather',
     packages=["davis_weatherlink_scraper"],
-    install_requires=['beautifulsoup4==4.4.1', 'requests==2.9.1'],
+    install_requires=['beautifulsoup4==4.4.1', 'requests==2.9.1', 'docopt==0.6.2'],
 
     extras_require={
         'dev': ['twine', 'wheel'],
