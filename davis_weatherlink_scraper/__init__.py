@@ -158,10 +158,8 @@ class WeatherLinkParser(object):
 
                         if current_section == "Wind":
                             if len(values) == 0:
-                                self._parsed["data"][current_row]["current"] = self.parse_value(td.string)
-                            if len(values) == 1:
                                 self._parsed["data"][current_row]["2min"] = self.parse_value(td.string)
-                            if len(values) == 2:
+                            if len(values) == 1:
                                 self._parsed["data"][current_row]["10min"] = self.parse_value(td.string)
 
                         if current_section == "Rain":
