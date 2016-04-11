@@ -1,0 +1,36 @@
+#!/usr/bin/env python
+"""Davis weatherlink parser/scraper
+
+Usage:
+    weatherlink.py fetch <username>
+    weatherlink.py parse <filename>
+
+"""
+
+from davis_weatherlink_scraper import WeatherLink, WeatherLinkParser
+from docopt import docopt
+import sys
+import pprint
+
+
+def fetch(username):
+    weatherlink = WeatherLink()
+    pprint.pprint(weatherlink.get(username))
+    return 0
+
+
+def parse(filename):
+    parser = WeatherLinkParser()
+    pprint.pprint(parser.parse(open(filename).read()))
+    return 0
+
+
+def main():
+    arguments = docopt(__doc__, version='Weatherlink scraper')
+    if arguments["fetch"]:
+        return fetch(arguments["<username>"])
+    if arguments["parse"]:
+        return parse(arguments["<filename>"])
+
+if __name__ == '__main__':
+    sys.exit(main())

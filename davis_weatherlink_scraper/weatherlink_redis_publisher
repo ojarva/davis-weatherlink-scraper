@@ -1,0 +1,128 @@
+#!/usr/bin/env python
+
+"""
+Usage:
+  weatherlink_redis_publisher run <username> <redis_pubsub> [--interval=<seconds>] [--influx] [--influx-measurement=<weather>] [--redis-host=<hostname>] [--redis-port=<port>] [--station-timezone=<minutes>] [--fail-on-error]
+
+Options:
+  --interval=<seconds>            Delay between requests. Must be >30. Defaults to none -> single run instead of loop
+  --influx                        Publish in influx-compatible dictionaries.
+  --influx-measurement=<weather>  Measurement name for influx-compatible data. Defaults to "weather"
+  --redis-host=<hostname>         Hostname for redis. Defaults to localhost.
+  --redis-port=<port>             Port for redis. Defaults to 6379 (redis default)
+  --station-timezone=<minutes>    Timezone information (in minutes), to convert Weatherlink local timestamps to UTC
+  --fail-on-error                 Throw exception for runtime errors
+"""
+
+from docopt import docopt
+import datetime
+import davis_weatherlink_scraper
+import json
+import logging
+import redis
+import requests.exceptions
+import sys
+import time
+
+__all__ = []
+
+
+class RedisPublisher(object):
+    def __init__(self, username, interval, redis_channel, station_timezone=0, redis_host=None, redis_port=None, influx=False, influx_measurement=None, fail_on_error=False):
+        self.weatherlink = davis_weatherlink_scraper.WeatherLink()
+        redis_args = {}
+        if redis_host:
+            redis_args["host"] = redis_host
+        if redis_port:
+            redis_args["port"] = redis_port
+
+        self.redis = redis.StrictRedis(**redis_args)
+        self.redis_channel = redis_channel
+        self.interval = interval
+        self.station_timezone = datetime.timedelta(minutes=station_timezone)
+        self.username = username
+        self.influx = influx
+        self.influx_measurement = influx_measurement or "weather"
+        self.fail_on_error = fail_on_error
+        FORMAT = '%(asctime)-15s %(message)s'
+        logging.basicConfig(format=FORMAT)
+        self.logger = logging.getLogger(__name__)
+
+    @classmethod
+    def get_value(cls, data, field):
+        return data["data"][field]["current"]["value"]
+
+    def convert(self, data):
+        if not self.influx:
+            data["meta"]["timestamp"] = data["meta"]["timestamp"].isoformat()
+            return data
+        timestamp = (data["meta"]["timestamp"] - self.station_timezone).isoformat() + "Z"
+        fields = {}
+        for field_name in ("Barometer", "Outside Humidity", "Outside Temp", "Rain", "Wind Direction", "Wind Gust Speed", "Wind Speed", "Inside Temp", "Inside Humidity"):
+            fields[field_name] = self.get_value(data, field_name)
+        converted = {
+            "measurement": self.influx_measurement,
+            "time": timestamp,
+            "tags": {
+                "name": data["meta"]["name"],
+            },
+            "fields": fields,
+        }
+        return [converted]
+
+    def fetch(self):
+        try:
+            data = self.weatherlink.get(self.username)
+        except requests.exceptions.ConnectionError as err:
+            self.logger.error("Fetching data failed: %s", err)
+            if self.fail_on_error:
+                raise err
+            return
+        data = self.convert(data)
+        if "meta" not in data or "data" not in data:
+            self.logger.warning("Invalid data from scraper: missing meta/data")
+            if self.fail_on_error:
+                raise ValueError("Invalid data from scraper: missing meta/data")
+        try:
+            self.redis.publish(self.redis_channel, json.dumps(data))
+        except redis.exceptions.ConnectionError as err:
+            self.logger.error("Publishing to redis failed: %s", err)
+            if self.fail_on_error:
+                raise err
+            return
+
+    def loop(self):
+        last_fetched_at = 0
+        while True:
+            sleep_time = self.interval - (time.time() - last_fetched_at)
+            if sleep_time > 0:
+                self.logger.debug("Sleeping for %s", sleep_time)
+                time.sleep(sleep_time)
+            last_fetched_at = time.time()
+            self.fetch()
+
+    def run(self):
+        if self.interval:
+            self.loop()
+        else:
+            self.fetch()
+
+
+def main():
+    arguments = docopt(__doc__, version='Weatherlink redis publisher')
+    if arguments["run"]:
+        interval = arguments["--interval"] or None
+        if interval:
+            interval = int(interval)
+            if interval < 30:
+                raise ValueError("Interval must be >30")
+        timezone = int(arguments["--station-timezone"] or 0)
+        influx = arguments["--influx"] or False
+        fail_on_error = arguments["--fail-on-error"] or False
+        publisher = RedisPublisher(arguments["<username>"], interval, arguments["<redis_pubsub>"], timezone, arguments["--redis-host"], arguments["--redis-port"], influx, arguments["--influx-measurement"], fail_on_error)
+        publisher.run()
+    return 0
+
+
+if __name__ == '__main__':
+    sys.exit(main())

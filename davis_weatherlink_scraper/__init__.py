@@ -1,14 +1,5 @@
-"""Fetch weatherlink data
-
-Usage:
-    weatherlink.py fetch <username>
-    weatherlink.py parse <filename>
-
-"""
-
 from bs4 import BeautifulSoup
 import datetime
-from docopt import docopt
 import pprint
 import re
 import requests
@@ -92,6 +83,8 @@ class WeatherLinkParser(object):
             parsed = try_with_unit(raw_value, unit)
             if parsed is not None:
                 return parsed
+        if raw_value == "Calm":
+            return {"unit": "m/s", "value": 0, "raw_value": "Calm"}
         return {"raw_value": raw_value}
 
     def parse(self, content=None):
@@ -177,26 +170,3 @@ class WeatherLinkParser(object):
                         values.append(td.string)
 
         return self._parsed
-
-
-def fetch(username):
-    weatherlink = WeatherLink()
-    pprint.pprint(weatherlink.get(username))
-    return 0
-
-
-def parse(filename):
-    parser = WeatherLinkParser()
-    pprint.pprint(parser.parse(open(filename).read()))
-    return 0
-
-
-def main():
-    arguments = docopt(__doc__, version='Weatherlink scraper')
-    if arguments["fetch"]:
-        return fetch(arguments["<username>"])
-    if arguments["parse"]:
-        return parse(arguments["<filename>"])
-
-if __name__ == '__main__':
-    sys.exit(main())
