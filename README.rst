@@ -1,6 +1,9 @@
 Davis weatherlink scraper/parser
 ================================
 
+.. image:: https://travis-ci.org/ojarva/davis-weatherlink-scraper.svg?branch=master
+    :target: https://travis-ci.org/ojarva/davis-weatherlink-scraper
+
 Installation:
 
 ::
