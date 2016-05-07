@@ -26,6 +26,30 @@ class WeatherLinkParser(object):
         self._parsed = None
         self.parse(content)
 
+    @property
+    def _empty_data(self):
+        return dict({
+            "meta": {"timestamp": None, "name": None},
+            "data": {
+                "12 Hour Forecast": {"current": {"raw_value": None}},
+                "Average Wind Speed": {"10min": {"unit": None, "value": None}, "2min": {"unit": None, "value": None}},
+                "Bar Trend": {"current": {"raw_value": None}},
+                "Barometer": {"current": {"unit": None, "value": None}, "today_high": {"timestamp": None, "unit": None, "value": None}, "today_low": {"timestamp": None, "unit": None, "value": None}},
+                "Dew Point": {"current": {"unit": None, "value": None}, "today_high": {"timestamp": None, "unit": None, "value": None}, "today_low": {"timestamp": None, "unit": None, "value": None}},
+                "Heat Index": {"current": {"unit": None, "value": None}, "today_high": {"timestamp": None, "unit": None, "value": None}},
+                "Inside Humidity": {"current": {"unit": None, "value": None}, "today_high": {"timestamp": None, "unit": None, "value": None}, "today_low": {"timestamp": None, "unit": None, "value": None}},
+                "Inside Temp": {"current": {"unit": None, "value": None}, "today_high": {"timestamp": None, "unit": None, "value": None}, "today_low": {"timestamp": None, "unit": None, "value": None}},
+                "Last Hour Rain": {"current": {"unit": "mm", "value": None}},
+                "Outside Humidity": {"current": {"unit": None, "value": None}, "today_high": {"timestamp": None, "unit": None, "value": None}, "today_low": {"timestamp": None, "unit": None, "value": None}},
+                "Outside Temp": {"current": {"unit": None, "value": None}, "today_high": {"timestamp": None, "unit": None, "value": None}, "today_low": {"timestamp": None, "unit": None, "value": None}},
+                "Rain": {"current": {"unit": "mm/h", "value": None}, "day": {"unit": "mm", "value": None}, "month": {"unit": "mm", "value": None}, "storm": {"unit": "mm", "value": None}, "year": {"unit": "mm", "value": None}},
+                "Wind Chill": {"current": {"unit": None, "value": None}, "today_high": {"timestamp": None, "unit": None, "value": None}},
+                "Wind Direction": {"current": {"text": None, "unit": None, "value": None}},
+                "Wind Gust Speed": {"2min": {"unit": None, "value": None}},
+                "Wind Speed": {"current": {"unit": None, "value": None}, "today_high": {"timestamp": None, "unit": None, "value": None}}
+            },
+        })
+
     def parse_timestamp(self, timestamp):
         """ Current Conditions as of 12:01 Wednesday, September 9, 2015 """
         timestamp = timestamp.replace("Current Conditions as of ", "")
@@ -94,8 +118,7 @@ class WeatherLinkParser(object):
         if content is None:
             return
 
-        self._parsed = {"meta": {"name": None, "timestamp": None},
-                        "data": {}}
+        self._parsed = self._empty_data
 
         bs = BeautifulSoup(content, "html.parser")
         current_section = None
