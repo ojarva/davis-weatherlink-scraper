@@ -147,7 +147,6 @@ class WeatherLinkParser(object):
                     if not row_header_processed:
                         row_header_processed = True
                         current_row = td.string
-                        self._parsed["data"][current_row] = {}
                         continue
                     if td.string != u"\xa0":
                         if current_section == "Station Summary":
@@ -162,33 +161,35 @@ class WeatherLinkParser(object):
                                         pass
                                 else:
                                     value = td.string
-                                    self._parsed["data"][current_row]["current"] = self.parse_value(value)
+                                    print(current_row)
+                                    print(self._parsed)
+                                    self._parsed["data"][current_row]["current"].update(self.parse_value(value))
                             if len(values) == 1:
-                                self._parsed["data"][current_row]["today_high"] = self.parse_value(td.string)
+                                self._parsed["data"][current_row]["today_high"].update(self.parse_value(td.string))
                             if len(values) == 2:
                                 self._parsed["data"][current_row]["today_high"]["timestamp"] = td.string
                             if len(values) == 3:
-                                self._parsed["data"][current_row]["today_low"] = self.parse_value(td.string)
+                                self._parsed["data"][current_row]["today_low"].update(self.parse_value(td.string))
                             if len(values) == 4:
                                 self._parsed["data"][current_row]["today_low"]["timestamp"] = td.string
 
                         if current_section == "Wind":
                             if len(values) == 0:
-                                self._parsed["data"][current_row]["2min"] = self.parse_value(td.string)
+                                self._parsed["data"][current_row]["2min"].update(self.parse_value(td.string))
                             if len(values) == 1:
-                                self._parsed["data"][current_row]["10min"] = self.parse_value(td.string)
+                                self._parsed["data"][current_row]["10min"].update(self.parse_value(td.string))
 
                         if current_section == "Rain":
                             if len(values) == 0:
-                                self._parsed["data"][current_row]["current"] = self.parse_value(td.string)
+                                self._parsed["data"][current_row]["current"].update(self.parse_value(td.string))
                             if len(values) == 1:
-                                self._parsed["data"][current_row]["day"] = self.parse_value(td.string)
+                                self._parsed["data"][current_row]["day"].update(self.parse_value(td.string))
                             if len(values) == 2:
-                                self._parsed["data"][current_row]["storm"] = self.parse_value(td.string)
+                                self._parsed["data"][current_row]["storm"].update(self.parse_value(td.string))
                             if len(values) == 3:
-                                self._parsed["data"][current_row]["month"] = self.parse_value(td.string)
+                                self._parsed["data"][current_row]["month"].update(self.parse_value(td.string))
                             if len(values) == 4:
-                                self._parsed["data"][current_row]["year"] = self.parse_value(td.string)
+                                self._parsed["data"][current_row]["year"].update(self.parse_value(td.string))
 
                         values.append(td.string)
 
