@@ -55,7 +55,7 @@ class WeatherLinkParser(object):
         timestamp = timestamp.replace("Current Conditions as of ", "")
         return datetime.datetime.strptime(timestamp, "%H:%M %A, %B %d, %Y")
 
-    def parse_value(self, raw_value):
+    def parse_value(self, raw_value, extra=None):
         def format_value(value, unit):
             if unit == "KT":
                 # Knots, convert to m/s
@@ -66,9 +66,14 @@ class WeatherLinkParser(object):
                 value = round((value - 32) * 5.0 / 9.0, 1)
                 unit = "C"
             elif unit == "\"":
-                # inches. Convert to mm
-                value = round(value * 25.4, 1)
-                unit = "mm"
+                if extra == "barometer":
+                    # inHg. Convert to hPa
+                    value = round(value * 33.8639, 1)
+                    unit = "hPa"
+                else:
+                    # inches. Convert to mm
+                    value = round(value * 25.4, 1)
+                    unit = "mm"
             elif unit == "\"/Hour":
                 # inches. Convert to mm/hour
                 value = round(value * 25.4, 1)
@@ -103,7 +108,7 @@ class WeatherLinkParser(object):
             except ValueError:
                 pass
 
-        for unit in ("%", "hPa", "mm/Hour", "mm", "mb"):
+        for unit in ("%", "hPa", "mm/Hour", "mm", "mb", "\""):
             parsed = try_with_unit(raw_value, unit)
             if parsed is not None:
                 return parsed
@@ -152,6 +157,10 @@ class WeatherLinkParser(object):
                         if current_section == "Station Summary":
                             if len(values) == 0:
                                 # Current value
+                                if current_row == "Barometer":
+                                    extra = "barometer"
+                                else:
+                                    extra = None
                                 if current_row == "Wind Direction":
                                     try:
                                         text_item, degrees = td.string.split(u"\xa0")
@@ -161,15 +170,13 @@ class WeatherLinkParser(object):
                                         pass
                                 else:
                                     value = td.string
-                                    print(current_row)
-                                    print(self._parsed)
-                                    self._parsed["data"][current_row]["current"].update(self.parse_value(value))
+                                    self._parsed["data"][current_row]["current"].update(self.parse_value(value, extra))
                             if len(values) == 1:
-                                self._parsed["data"][current_row]["today_high"].update(self.parse_value(td.string))
+                                self._parsed["data"][current_row]["today_high"].update(self.parse_value(td.string, extra))
                             if len(values) == 2:
                                 self._parsed["data"][current_row]["today_high"]["timestamp"] = td.string
                             if len(values) == 3:
-                                self._parsed["data"][current_row]["today_low"].update(self.parse_value(td.string))
+                                self._parsed["data"][current_row]["today_low"].update(self.parse_value(td.string, extra))
                             if len(values) == 4:
                                 self._parsed["data"][current_row]["today_low"]["timestamp"] = td.string
 

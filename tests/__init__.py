@@ -23,7 +23,7 @@ class TestParsing(unittest.TestCase):
         for data_field, items in content["data"].items():
             for subfield, data in items.items():
                 if "unit" in data:
-                    self.assertIn(data["unit"], ("C", "m/s", "hPa", "%", "deg"))
+                    self.assertIn(data["unit"], ("C", "m/s", "hPa", "%", "deg", "mm/h", "mm"))
         self.assertEqual(22.6, content["data"]["Inside Temp"]["current"]["value"])
 
     def test_calm_parsing(self):
