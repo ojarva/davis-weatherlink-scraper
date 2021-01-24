@@ -32,7 +32,7 @@ setup(
     ],
     keywords='davis weatherlink weather',
     packages=["davis_weatherlink_scraper"],
-    install_requires=['beautifulsoup4==4.4.1', 'requests==2.9.1', 'docopt==0.6.2', 'redis==2.10.5'],
+    install_requires=['beautifulsoup4==4.4.1', 'requests==2.20.0', 'docopt==0.6.2', 'redis==2.10.5'],
     scripts=["davis_weatherlink_scraper/weatherlink_redis_publisher", "davis_weatherlink_scraper/weatherlink"],
     test_suite="tests",
 
